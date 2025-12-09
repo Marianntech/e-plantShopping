@@ -274,8 +274,25 @@ function ProductList({ onHomeClick }) {
             </div>
             {!showCart ? (
                 <div className="product-grid">
-
-
+{plantsArray.map((categoryObj) => (
+      <div key={categoryObj.category} className="category-section">
+        <h2 className="category-title">{categoryObj.category}</h2>
+        <div className="category-grid">
+          {categoryObj.plants.map((plant) => (
+            <div className="plant-card" key={plant.name}>
+              <img
+                src={plant.image}
+                alt={plant.name}
+                className="plant-image"
+              />
+              <h3 className="plant-name">{plant.name}</h3>
+              <p className="plant-description">{plant.description}</p>
+              <p className="plant-price">{plant.cost}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
                 </div>
             ) : (
                 <CartItem onContinueShopping={handleContinueShopping} />
