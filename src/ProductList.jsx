@@ -252,18 +252,14 @@ function ProductList({ onHomeClick }) {
         setShowCart(false); // Hide the cart when navigating to About Us
     };
 
-    const handleContinueShopping = (e) => {
-        e.preventDefault();
+    const handleContinueShopping = () => {
         setShowCart(false);
     };
     const handleAddToCart = (product) => {
-        // 1) saada valitud taim Reduxi CartSlice'i
         dispatch(addItem(product));
-      
-        // 2) uuenda lokaalne state, et nupp saaks näidata "Added"
         setAddedToCart((prevState) => ({
-          ...prevState,            // jäta varasemad väärtused alles
-          [product.name]: true,    // märgi see konkreetne taim lisatuks
+          ...prevState,            // Spread the previous state to retain existing entries
+          [product.name]: true,    // Set the current product's name as a key with value 'true' to mark it as added
         }));
       };
     return (

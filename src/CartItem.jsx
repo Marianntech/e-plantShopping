@@ -9,27 +9,46 @@ const CartItem = ({ onContinueShopping }) => {
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
- 
+     let total = 0;
+    cart.forEach((item) => {
+      const numericCost = parseFloat(item.cost.toString().substring(1));
+      total += numericCost * item.quantity;
+    });
+    return total.toFixed(2);
   };
 
   const handleContinueShopping = (e) => {
-   
+    e.preventDefault();
+    onContinueShopping(); 
   };
 
-
-
   const handleIncrement = (item) => {
+    const newQuantity = item.quantity + 1;
+    dispatch(updateQuantity({ name: item.name, quantity: newQuantity }));
   };
 
   const handleDecrement = (item) => {
-   
+       const newQuantity = item.quantity - 1;
+    if (newQuantity <= 0) {
+           dispatch(removeItem({ name: item.name }));
+    } else {
+      dispatch(updateQuantity({ name: item.name, quantity: newQuantity }));
+    }
   };
 
   const handleRemove = (item) => {
+    dispatch(removeItem({ name: item.name }));
   };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
+    const numericCost = parseFloat(item.cost.toString().substring(1));
+    const total = numericCost * item.quantity;
+    return total.toFixed(2);
+  };
+
+  const handleCheckoutShopping = (e) => {
+    alert('Functionality to be added for future reference');
   };
 
   return (
@@ -55,9 +74,13 @@ const CartItem = ({ onContinueShopping }) => {
       </div>
       <div style={{ marginTop: '20px', color: 'black' }} className='total_cart_amount'></div>
       <div className="continue_shopping_btn">
-        <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
+        <button className="get-started-button" 
+        onClick={handleContinueShopping}>Continue Shopping</button>
         <br />
-        <button className="get-started-button1">Checkout</button>
+        <button 
+        className="get-started-button1"
+        onClick={handleCheckoutShopping}
+        >Checkout</button>
       </div>
     </div>
   );
