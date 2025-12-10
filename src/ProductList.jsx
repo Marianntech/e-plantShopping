@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
+import { useDispatch } from 'react-redux';
+import { addItem } from './CartSlice';
 function ProductList({ onHomeClick }) {
     const [showCart, setShowCart] = useState(false);
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
+    const [addedToCart, setAddedToCart] = useState({}); // Track which products are added to cart
+    const dispatch = useDispatch();
 
     const plantsArray = [
         {
@@ -252,6 +256,16 @@ function ProductList({ onHomeClick }) {
         e.preventDefault();
         setShowCart(false);
     };
+    const handleAddToCart = (product) => {
+        // 1) saada valitud taim Reduxi CartSlice'i
+        dispatch(addItem(product));
+      
+        // 2) uuenda lokaalne state, et nupp saaks näidata "Added"
+        setAddedToCart((prevState) => ({
+          ...prevState,            // jäta varasemad väärtused alles
+          [product.name]: true,    // märgi see konkreetne taim lisatuks
+        }));
+      };
     return (
         <div>
             <div className="navbar" style={styleObj}>
@@ -288,6 +302,14 @@ function ProductList({ onHomeClick }) {
               <h3 className="plant-name">{plant.name}</h3>
               <p className="plant-description">{plant.description}</p>
               <p className="plant-price">{plant.cost}</p>
+              
+              <button 
+              className="add-to-cart-button" 
+              onClick={() => handleAddToCart(plant)}
+              disabled={addedToCart[plant.name]}      //prevent double add
+              >
+              {addedToCart[plant.name] ? 'Added' : 'Add to Cart'}
+              </button>
             </div>
           ))}
         </div>
