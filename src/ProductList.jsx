@@ -6,9 +6,11 @@ import { addItem, selectCartItemCount } from './CartSlice';
 function ProductList({ onHomeClick }) {
     const [showCart, setShowCart] = useState(false);
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
-    const [addedToCart, setAddedToCart] = useState({}); // Track which products are added to cart
+    
     const dispatch = useDispatch();
     const cartItemCount = useSelector(selectCartItemCount);
+    const cartItems = useSelector((state) => state.cart.items);
+
 
 
     const plantsArray = [
@@ -258,12 +260,9 @@ function ProductList({ onHomeClick }) {
         setShowCart(false);
     };
     const handleAddToCart = (product) => {
-        dispatch(addItem(product));
-        setAddedToCart((prevState) => ({
-          ...prevState,            // Spread the previous state to retain existing entries
-          [product.name]: true,    // Set the current product's name as a key with value 'true' to mark it as added
-        }));
-      };
+  dispatch(addItem(product));
+};
+
     return (
         <div>
             <div className="navbar" style={styleObj}>
@@ -327,10 +326,9 @@ function ProductList({ onHomeClick }) {
               <button 
               className="add-to-cart-button" 
               onClick={() => handleAddToCart(plant)}
-              disabled={addedToCart[plant.name]}      //prevent double add
-              >
-              {addedToCart[plant.name] ? 'Added' : 'Add to Cart'}
-              </button>
+              disabled={cartItems.some((item) => item.name === plant.name)}>
+                 {cartItems.some((item) => item.name === plant.name) ? 'Added' : 'Add to Cart'}
+                </button>
             </div>
           ))}
         </div>
